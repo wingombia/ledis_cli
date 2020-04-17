@@ -20,7 +20,9 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
+  host: localhost
+  username: <%= ENV["LEDIS_CLI_DATABASE_USERNAME"] %>
+  password: <%= ENV["LEDIS_CLI_DATABASE_PASSWORD"] %>
 development:
   <<: *default
   database: ledis_cli_development

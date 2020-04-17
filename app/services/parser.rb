@@ -3,7 +3,7 @@ class Parser
   SUCCESS = "1"
   FAIL = "0"
   def initialize(lines:)
-    @lines = lines
+    @lines = Array(lines)
   end
 
   def perform
@@ -23,7 +23,7 @@ class Parser
   end
 
   def set_command(key, value)
-    Ledis.set(key: key, value: value)
+    Ledis.set(key: key.to_s, value: value)
   end
 
   def get_command(key)
@@ -48,5 +48,17 @@ class Parser
 
   def ttl_command(key)
     Ledis.ttl(key: key)
+  end
+
+  def sadd_command(key, *values)
+    Ledis.sadd(key: key, values: values)
+  end
+
+  def srem_command(key, *values)
+    Ledis.srem(key: key, values: values)
+  end
+
+  def smembers_command(key)
+    Ledis.smembers(key: key)
   end
 end

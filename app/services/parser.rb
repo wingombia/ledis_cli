@@ -1,5 +1,7 @@
 class Parser
   attr_accessor :lines
+  SUCCESS = "1"
+  FAIL = "0"
   def initialize(lines:)
     @lines = lines
   end
@@ -26,5 +28,25 @@ class Parser
 
   def get_command(key)
     Ledis.get(key: key)
+  end
+
+  def keys_command
+    result = ""
+    Ledis.keys.each_with_index do |k, i|
+        result += "#{i + 1}) #{k}<br>"
+    end
+    result[0..-5]
+  end
+
+  def del_command(key)
+    Ledis.delete(key: key) ? SUCCESS : FAIL
+  end
+
+  def expire_command(key, time)
+    Ledis.expire(key: key, time: time)
+  end
+
+  def ttl_command(key)
+    Ledis.ttl(key: key)
   end
 end

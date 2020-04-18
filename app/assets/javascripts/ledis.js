@@ -22,7 +22,6 @@ $(document).on("turbolinks:load", () => {
                 },
                 dataType: "json",
                 success: (data, status, xhr) => {
-                    console.log(data.result);
                     display(data.result, true);
                 }
             });

@@ -21,8 +21,13 @@ class Parser
       args = get_args(line)
       record(line.squish, args[0]) if !load
       command = (args[0] + "_command").downcase.to_sym
-      response = send(command, *args[1..])
-      #response = response(send(command, *args[1..]), args[0])
+      #response = send(command, *args[1..])
+      begin
+        response = response(send(command, *args[1..]), args[0])
+      rescue => e
+        e = LedisExceptions::NoCommand.new if e.class == NoMethodError
+        response = ResponseHandler.new(result: e, type: :error).perform
+      end
     end
     response
   end
@@ -42,11 +47,7 @@ class Parser
   end
 
   def keys_command
-    result = ""
-    Ledis.keys.each_with_index do |k, i|
-        result += "#{i + 1}) #{k}<br>"
-    end
-    result[0..-5]
+    Ledis.keys
   end
 
   def del_command(key)
@@ -92,5 +93,17 @@ class Parser
   end
 
   def response(result, command)
+    ResponseHandler.new(result: result, type: type(command)).perform
   end
+
+  def type(command)
+    command_sym = command.downcase.to_sym
+    RESPONSE_TYPES.each do |key, val|
+      if val.include?(command_sym)
+        return key 
+      end
+    end
+  end
+
+
 end

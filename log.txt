@@ -10,3 +10,27 @@ set def 55
 set def 55
 set def 53
 set def 5
+set abc 4
+sadd d 3 2 4
+srem d 2 1 4
+expire abc 10
+del abc
+expire def 10
+del def
+set abc def
+set abc def ghk
+set abc def ghk
+set abc def ghk
+set def
+set def ghk se
+sadd d 2
+srem d 2 1
+srem set 2
+srem f
+sadd set 2
+sadd f 3
+sadd d 2 4
+sadd f 2 3
+sadd set 1
+srem set 1
+srem set

@@ -10,6 +10,7 @@ class Ledis
   end
 
   def self.get(key:)
+    check_type(key, String)
     touch(key: key)
   end
   
@@ -38,9 +39,8 @@ class Ledis
 
   def self.sadd(key:, values:)
     #TODO: Implement WRONG TYPE ERROR
-    if key_val = touch(key: key)
-      return "ERROR" if key_type(key) != Set
-    else
+    key_val = touch(key: key)
+    if !(check_type(key, Set))
       @@storage[key] = Set.new
       key_val = @@storage[key]
     end
@@ -53,12 +53,8 @@ class Ledis
   end
 
   def self.srem(key:, values:)
-    if key_val = touch(key: key)
-      return "ERROR" if key_type(key) != Set
-    else
-      return 0
-    end 
-
+    return 0 if !(check_type(key, Set))
+    key_val = touch(key: key)
     count = 0
     Array(values).each do |val|
       count += 1 if key_val.delete?(val)
@@ -67,17 +63,15 @@ class Ledis
   end
 
   def self.smembers(key:)
-    if key_val = touch(key: key)
-      return "ERROR" if key_type(key) != Set
-    else
-      return "Empty list or set"
-    end
+    return "" if !(check_type(key, Set))
+    key_val = touch(key: key)
     key_val
   end
 
   def self.sinter(keys:)
     result = nil
     keys.each do |key|
+      check_type(key, Set)
       set = Set.new(touch(key: key))
       result = !result ? set : result & set
     end
@@ -98,6 +92,11 @@ class Ledis
   end
 
   ###FILE###
+  def self.check_type(key, type)
+    tmp = key_type(key)
+    raise LedisExceptions::WrongType.new if tmp != type && tmp != NilClass
+    (tmp == NilClass) ? false : true
+  end
 
   def self.append_log(line:)
     File.new(LOG_FILE, "w") if !LOG_FILE.exist?

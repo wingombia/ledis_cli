@@ -45,6 +45,6 @@ class ResponseHandler
   end
 
   def value_handler
-    "\"#{result}\""
+    result ? "\"#{result}\"" : "(nil)"
   end
 end

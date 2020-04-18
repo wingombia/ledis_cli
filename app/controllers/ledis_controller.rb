@@ -1,5 +1,8 @@
 class LedisController < ApplicationController
   def cli
+    if Ledis.storage.empty? && Ledis::LOG_FILE.exist?
+      Ledis.load
+    end
   end
 
   def parse

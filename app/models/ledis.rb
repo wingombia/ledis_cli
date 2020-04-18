@@ -1,4 +1,6 @@
 class Ledis
+  LOG_FILE = Rails.root.join("log.txt")
+  DUMP_FILE = Rails.root.join("dump.txt")
   @@storage = {}
   ###STRING###
 
@@ -73,25 +75,52 @@ class Ledis
     key_val
   end
 
-  def self.storage
-    @@storage
+  def self.sinter(keys:)
+    result = nil
+    keys.each do |key|
+      set = Set.new(touch(key: key))
+      result = !result ? set : result & set
+    end
+    result
   end
 
-  
-
-  def self.read_file(file_path:)
-    File.open("tmp.txt") do |f|
-      lines = f.readlines.map(&:chomp)
-      Parser.new(lines: lines).perform
-    end
+  def self.storage
+    @@storage
   end
   
   def self.touch(key:)
     if exist?(key) && expired?(key)
+      append_log(line: "del #{key}")
       delete(key: key)
       return false
     end
     value(key)
+  end
+
+  ###FILE###
+
+  def self.append_log(line:)
+    File.new(LOG_FILE, "w") if !LOG_FILE.exist?
+    File.open(LOG_FILE, "a") { |f| f.write(line + "\n") }
+  end
+
+  def self.load(file_path: LOG_FILE)
+    File.open(file_path) do |f|
+      lines = f.readlines.map(&:chomp)
+      Parser.new(lines: lines).perform(load: true)
+    end
+  end
+  
+  def self.save(file_path: DUMP_FILE)
+    File.new(LOG_FILE, "w") if !LOG_FILE.exist?
+    FileUtils.cp(LOG_FILE, file_path)
+  end
+
+  def self.restore(file_path: DUMP_FILE)
+    return "No dump file" if !DUMP_FILE.exist?
+    @@storage = {}
+    FileUtils.cp(file_path, LOG_FILE)
+    load
   end
 
   private
@@ -125,6 +154,7 @@ class Ledis
 
   def self.set_expire(key, time)
     @@storage[key] = {value: value(key), expire: time}
+    p @@storage[key]
   end
 
   def self.have_expire?(key)

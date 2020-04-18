@@ -1,0 +1,12 @@
+set abc 3
+set def 4
+sadd set 3 4 5
+set set 3
+set def 5
+set def 5
+set def 53
+set def 54
+set def 55
+set def 55
+set def 53
+set def 5

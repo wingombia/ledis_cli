@@ -42,7 +42,7 @@ $(document).on("turbolinks:load", () => {
                 (current_input > 0) ? current_input -= 1 : current_input = input_history.length - 1
                 input.val(input_history[current_input]);
             } else if (event.which == 40){
-                (current_input < input_history.length - 1) ? current_input += 1 : current_input = 0
+                (current_input < input_history.length - 1) ? current_input += 1 : ""
                 input.val(input_history[current_input]);
             }
             

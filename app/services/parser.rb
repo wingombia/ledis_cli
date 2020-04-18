@@ -7,8 +7,8 @@ class Parser
     basic: [:set, :save, :restore],
     list: [:keys, :smembers, :sinter],
     bool: [:del, :expire],
-    count: [:srem, :sadd],
-    value: [:ttl, :get]
+    count: [:srem, :sadd, :ttl],
+    value: [:get]
   }
 
   def initialize(lines:)
@@ -35,7 +35,7 @@ class Parser
   private
 
   def get_args(line)
-    line.squish.split(" ")
+    line = line.squish.split(" ")
   end
 
   def set_command(key, value)
@@ -104,6 +104,4 @@ class Parser
       end
     end
   end
-
-
 end

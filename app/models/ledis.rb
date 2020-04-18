@@ -1,11 +1,11 @@
-class Ledis
+module Ledis
   LOG_FILE = Rails.root.join("log.txt")
   DUMP_FILE = Rails.root.join("dump.txt")
   @@storage = {}
   ###STRING###
 
   def self.set(key:, value:)
-    @@storage[key] = value
+    @@storage[key] = remove_dq(value)
     "OK"
   end
 
@@ -17,7 +17,11 @@ class Ledis
   ###DATA_EXPIRATION###
 
   def self.keys
-    @@storage.keys
+    result = []
+    @@storage.keys.each do |key|
+      result << key if touch(key: key)
+    end
+    result
   end
 
   def self.delete(key:)
@@ -44,9 +48,10 @@ class Ledis
       @@storage[key] = Set.new
       key_val = @@storage[key]
     end
-
     count = 0
+
     Array(values).each do |val|
+      val = remove_dq(val)
       count += 1 if key_val.add?(val) 
     end
     count
@@ -56,7 +61,9 @@ class Ledis
     return 0 if !(check_type(key, Set))
     key_val = touch(key: key)
     count = 0
+
     Array(values).each do |val|
+      val = remove_dq(val)
       count += 1 if key_val.delete?(val)
     end
     count
@@ -116,7 +123,7 @@ class Ledis
   end
 
   def self.restore(file_path: DUMP_FILE)
-    return "No dump file" if !DUMP_FILE.exist?
+    return "(no dump file)" if !DUMP_FILE.exist?
     @@storage = {}
     FileUtils.cp(file_path, LOG_FILE)
     load
@@ -126,6 +133,13 @@ class Ledis
 
   def self.key_type(key)
     value(key).class
+  end
+
+  def self.remove_dq(value)
+    if value[0] == '"'
+      value = value[1..-2]
+    end
+    value
   end
 
   def self.expired?(key)
@@ -159,4 +173,5 @@ class Ledis
   def self.have_expire?(key)
     @@storage[key].class == Hash
   end
+  
 end

@@ -1,13 +1,13 @@
 module LedisExceptions
-    class WrongType < StandardError
+  class WrongType < StandardError
     def initialize(msg = "Operation against a key holding the wrong kind of value")
-        super
+      super
     end
-    end
+  end
 
-    class NoCommand < StandardError
+  class NoCommand < StandardError
     def initialize(msg = "Not recognized command")
-        super
+      super
     end
-    end
+  end
 end

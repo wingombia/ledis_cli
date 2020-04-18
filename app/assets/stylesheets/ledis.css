@@ -20,14 +20,9 @@ body {
   border: 1px solid gray;
   border-bottom-style: none;
 }
-#result div {
-  margin-bottom: 0.5em;
-}
-#result .input {
-  font-weight: bold;
-}
 #terminal {
   border: 1px solid black;
+  line-height: 0.5em;
   background-color: black;
   color: white;
   height: 2em;

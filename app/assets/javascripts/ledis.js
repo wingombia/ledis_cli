@@ -1,30 +1,24 @@
 $(document).on("turbolinks:load", () => {
-    function focus_input(){
-        $("#terminal").focus().val(">");
-    }
+    let input_history = [""];
+    let current_input = 0;
     
     function display(input, is_result = false) {
         let result = $("#result");
         if (!is_result){
-            result.append("<div class='input'>>\t" + input + "</div>");
+            result.append(">\t" + input + "<br>");
         } else {
-            result.append("<div>\t" + input + "</div>");
+            result.append(input + "<br>");
         }
     }
-
-    let input_history = [];
-    let current_input = -1;
-    focus_input();
 
     $("#terminal").on("keydown", (event) => {
         let input = $("#terminal");
         if (event.which == 13){
-            let command = input.val().slice(1);
             $.ajax({
                 url: "parse",
                 type: "post",
                 data: {
-                    command: command
+                    command: input.val()
                 },
                 dataType: "json",
                 success: (data, status, xhr) => {
@@ -32,35 +26,25 @@ $(document).on("turbolinks:load", () => {
                 }
             });
 
-            input_history.push(command);
+            input_history.push(input.val());
             current_input = input_history.length;
 
-            display(command);
-            focus_input();
+            display(input.val());
+            input.val("");
         }
     })
 
     $("#terminal").on("keydown", (event) => {
         let input = $("#terminal");
         if (input_history.length > 0){
-            
             if (event.which == 38){
-                (current_input > 0) ? current_input -= 1 : ""
-                input.val(">" + input_history[current_input]).focus();
-                event.preventDefault();
+                (current_input > 0) ? current_input -= 1 : current_input = input_history.length - 1
+                input.val(input_history[current_input]);
             } else if (event.which == 40){
-                if (current_input < input_history.length - 1){
-                    current_input += 1
-                    input.val(">" + input_history[current_input]);
-                } else {
-                    if (current_input < input_history.length) current_input += 1;
-                    focus_input();
-                }
+                (current_input < input_history.length - 1) ? current_input += 1 : ""
+                input.val(input_history[current_input]);
             }
             
-        }
-        if (event.which == 8 && input.val().length == 1){
-            event.preventDefault();
         }
     })
 })

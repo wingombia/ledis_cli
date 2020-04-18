@@ -34,23 +34,3 @@ sadd f 2 3
 sadd set 1
 srem set 1
 srem set
-set a "bdf"
-set a bdf
-sadd set1 "a" b "c"
-sadd set1 abc
-sadd set1 "abc"
-sadd set1 d "d"
-sadd f 3 4
-srem f 3 1 2
-expire f 10
-del f
-expire a 10
-del a
-expire d 10
-expire d 10
-del d
-sadd d 1 2 3
-set abc 4
-set def 3
-set abc
-set abc 4

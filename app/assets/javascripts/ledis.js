@@ -1,6 +1,6 @@
 $(document).on("turbolinks:load", () => {
     function focus_input(){
-        $("#terminal").focus().val(">");
+        $("#terminal").focus().val("");
     }
     function updateScroll(){
         let result = $("#result");
@@ -25,7 +25,7 @@ $(document).on("turbolinks:load", () => {
     $("#terminal").on("keydown", (event) => {
         let input = $("#terminal");
         if (event.which == 13){
-            let command = input.val().slice(1);
+            let command = input.val();
             $.ajax({
                 url: "parse",
                 type: "post",
@@ -55,21 +55,18 @@ $(document).on("turbolinks:load", () => {
             
             if (event.which == 38){
                 (current_input > 0) ? current_input -= 1 : ""
-                input.val(">" + input_history[current_input]).focus();
+                input.val(input_history[current_input]).focus();
                 event.preventDefault();
             } else if (event.which == 40){
                 if (current_input < input_history.length - 1){
                     current_input += 1
-                    input.val(">" + input_history[current_input]);
+                    input.val(input_history[current_input]);
                 } else {
                     if (current_input < input_history.length) current_input += 1;
                     focus_input();
                 }
             }
             
-        }
-        if (event.which == 8 && input.val().length == 1){
-            event.preventDefault();
         }
     })
 })

@@ -120,6 +120,7 @@ module Ledis
   def self.save(file_path: DUMP_FILE)
     File.new(LOG_FILE, "w") if !LOG_FILE.exist?
     FileUtils.cp(LOG_FILE, file_path)
+    "OK"
   end
 
   def self.restore(file_path: DUMP_FILE)
@@ -127,6 +128,7 @@ module Ledis
     @@storage = {}
     FileUtils.cp(file_path, LOG_FILE)
     load
+    "OK"
   end
 
   private

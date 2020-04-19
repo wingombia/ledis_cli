@@ -1,0 +1,46 @@
+body {
+  height: 100vh;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+}
+#container {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+  margin: 0.5em;
+}
+#result {
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  height: 90%;
+  background-color: lightgrey;
+  border: 1px solid gray;
+  border-bottom-style: none;
+  overflow: auto;
+}
+#result div {
+  margin-bottom: 0.5em;
+}
+#result .input {
+  font-weight: bold;
+}
+#terminal {
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+  height: 2em;
+}
+.error {
+  display: inline-block;
+  color: white;
+  background-color: darkred;
+  width: 100%;
+  height: 2em;
+  line-height: 2em;
+}
+#help {
+  border-bottom: 1px solid dimgray;
+}

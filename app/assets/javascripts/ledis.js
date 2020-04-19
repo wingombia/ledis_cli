@@ -2,7 +2,12 @@ $(document).on("turbolinks:load", () => {
     function focus_input(){
         $("#terminal").focus().val(">");
     }
-    
+    function updateScroll(){
+        let result = $("#result");
+        console.log(result.scrollTop() + " " + result[0].scrollHeight);
+        result.scrollTop(result[0].scrollHeight);// - result[0].clientHeight);
+    }
+    //Display result
     function display(input, is_result = false) {
         let result = $("#result");
         if (!is_result){
@@ -10,12 +15,13 @@ $(document).on("turbolinks:load", () => {
         } else {
             result.append("<div>\t" + input + "</div>");
         }
+        updateScroll();
     }
 
     let input_history = [];
     let current_input = -1;
     focus_input();
-
+    //Send input to /parse
     $("#terminal").on("keydown", (event) => {
         let input = $("#terminal");
         if (event.which == 13){
@@ -29,7 +35,10 @@ $(document).on("turbolinks:load", () => {
                 dataType: "json",
                 success: (data, status, xhr) => {
                     display(data.result, true);
-                }
+                },
+                error: (xhr, status, exception) => {
+                    display(`<div class=\"error\">\t(error) AJAX failed: ${status} </div>`, true);
+                } 
             });
 
             input_history.push(command);
@@ -39,7 +48,7 @@ $(document).on("turbolinks:load", () => {
             focus_input();
         }
     })
-
+    //Input history
     $("#terminal").on("keydown", (event) => {
         let input = $("#terminal");
         if (input_history.length > 0){

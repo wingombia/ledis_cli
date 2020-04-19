@@ -29,14 +29,14 @@ module Ledis
   end
 
   def self.expire(key:, time:)
-    exist?(key) ? set_expire(key, Time.now.sec + time.to_i) : nil
+    exist?(key) ? set_expire(key, Time.now.to_i + time.to_i) : nil
   end
 
   def self.ttl(key:)
     touch(key: key)
     return -2 if !exist?(key)
     return -1 if get_expire(key) == -1
-    get_expire(key) - Time.now.sec
+    get_expire(key) - Time.now.to_i
   end
 
   ###SET###
@@ -66,7 +66,7 @@ module Ledis
       val = remove_dq(val)
       count += 1 if key_val.delete?(val)
     end
-    
+
     if key_val.size == 0
       append_log(line: "del #{key}")
       delete(key: key)
@@ -153,7 +153,7 @@ module Ledis
   def self.expired?(key)
     return false if !have_expire?(key)
     expire = get_expire(key)   
-    expire <= Time.now.sec
+    expire <= Time.now.to_i
   end
 
   def self.exist?(key)
@@ -175,7 +175,6 @@ module Ledis
 
   def self.set_expire(key, time)
     @@storage[key] = {value: value(key), expire: time}
-    p @@storage[key]
   end
 
   def self.have_expire?(key)

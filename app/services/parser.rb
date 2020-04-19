@@ -61,13 +61,13 @@ class Parser
   def ttl_command(key)
     Ledis.ttl(key: key)
   end
-
-  def sadd_command(key, *values)
-    Ledis.sadd(key: key, values: values)
+  #first_value is added to make the app raise argument error when srem, sadd have only key argument
+  def sadd_command(key, first_value, *values)
+    Ledis.sadd(key: key, values: values.unshift(first_value))
   end
 
-  def srem_command(key, *values)
-    Ledis.srem(key: key, values: values)
+  def srem_command(key, first_value, *values)
+    Ledis.srem(key: key, values: values.unshift(first_value))
   end
 
   def smembers_command(key)

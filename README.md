@@ -1,24 +1,9 @@
 # README
+Ledis (lightweight version of Redis) and basic webcli by Phan Bao Minh
+# Initialization
+Requirement (at least):
+* `ruby 2.6.5`
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* `rails 5.2.4.1`
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Create a copy of `.env.development.local.template` and rename it to `.env.development.local` and add your postgresql database username and password to it. (database used only for the purpose of running a rails server).

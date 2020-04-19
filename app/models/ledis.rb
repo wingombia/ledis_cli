@@ -66,6 +66,12 @@ module Ledis
       val = remove_dq(val)
       count += 1 if key_val.delete?(val)
     end
+    
+    if key_val.size == 0
+      append_log(line: "del #{key}")
+      delete(key: key)
+    end
+
     count
   end
 
